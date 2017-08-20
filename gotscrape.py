@@ -7,5 +7,5 @@ c = r.content
 
 soup = BeautifulSoup(c, "html.parser")
 
-all = soup.find_all("table",{"class":"navbox collapsible expanded"})
-print(all)
+all = soup.find_all("table", {"class": "navbox collapsible expanded"})[0]
+print(all.find("td").text.replace("[c]","").replace("[e]","").replace("[f]","").replace("[d]",""))
