@@ -12,14 +12,27 @@ all = soup.find_all("table", {"class": "navbox collapsible expanded"})[0]
 rawnames = all.find("td").text.replace("\n\n","").replace("\n","").replace("  ","")
 cleannames = re.split(r"\[\w+\]", rawnames)
 namelist=[]
+linklist = []
 for item in cleannames:
     #I copied this regex from stackoverflow - it's putting a space between instances of lowercase
-    #followed by uppercase - correctly spacing the names
-    i = re.sub(r'([a-z])([A-Z])', r'\1 \2', item)
+    #followed by uppercase - correctly underscoring the names
+    i = re.sub(r'([a-z])([A-Z])', r'\1_\2', item)
     if i != str(""):
+        if "_" not in i:
+            i = i + "_Stark"
         namelist.append(i)
-#names are cleaned via cleannames and appended to the namelist, which is a list of the data we need
+        linklist.append("https://en.wikipedia.org/wiki/"+ i)
+#this checks whether the links work, but it's pointless as wikipedia resolves all pages
+#even if they don't exist... so this is kind of pointless in general
+#as the whole idea was to get character info from individual character pages
+for item in linklist:
+    request = requests.get(item)
+    if request.status_code == 200:
+        pass
+    else:
+        item = None
 print(namelist)
+print(linklist)
 
 
 
