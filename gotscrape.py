@@ -22,17 +22,25 @@ for item in cleannames:
             i = i + "_Stark"
         namelist.append(i)
         linklist.append("https://en.wikipedia.org/wiki/"+ i)
-#this checks whether the links work, but it's pointless as wikipedia resolves all pages
-#even if they don't exist... so this is kind of pointless in general
-#as the whole idea was to get character info from individual character pages
-for item in linklist:
-    request = requests.get(item)
-    if request.status_code == 200:
-        pass
+
+#this is a WIP, trying to filter out only the URLs which lead to actual character pages
+a = 0
+for b in linklist[a]:
+    # print(linklist[a])
+    request = requests.get(linklist[a])
+    # print(request.headers)
+    print(request.status_code)
+    print(request.url)
+    if request.status_code == 404:
+        print("None")
+    elif request.status_code == 304:
+        print("None")
     else:
-        item = None
-print(namelist)
-print(linklist)
+        print("Ok")
+    a=a+1
+
+# print(namelist)
+# print(linklist)
 
 
 
