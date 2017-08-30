@@ -10,29 +10,18 @@ soup = BeautifulSoup(c, "html.parser")
 all = soup.find_all("span", {"class": "mw-headline"})
 regex = ('(House|References|Secondary sources|Primary sources|Bibliography|External links|Royal court and officials|Night\\\'s Watch and wildlings|The Sand Snakes)')
 p = re.compile(regex)
+namelist=[]
+linklist = []
 for item in all:
     name = item.text
     if p.match(name) is None:
-        print(name)
+        namelist.append(name)
+        urlend = name.replace(" ", "_")
+        linklist.append("https://en.wikipedia.org/wiki/" + urlend)
     else:
         pass
-
-    # name.match("House" | "References" | "Secondary sources" | "Primary sources" | "Bibliography" | "External links")
-
-# all = soup.find_all("table", {"class": "navbox collapsible expanded"})[0]
-# rawnames = all.find("td").text.replace("\n\n","").replace("\n","").replace("  ","")
-# cleannames = re.split(r"\[\w+\]", rawnames)
-# namelist=[]
-# linklist = []
-# for item in cleannames:
-#     #I copied this regex from stackoverflow - it's putting a space between instances of lowercase
-#     #followed by uppercase - correctly underscoring the names
-#     i = re.sub(r'([a-z])([A-Z])', r'\1_\2', item)
-#     if i != str(""):
-#         if "_" not in i:
-#             i = i + "_Stark"
-#         namelist.append(i)
-#         linklist.append("https://en.wikipedia.org/wiki/"+ i)
+print(namelist)
+print(linklist)
 
 #this is a WIP, trying to filter out only the URLs which lead to actual character pages
 # a = 0
