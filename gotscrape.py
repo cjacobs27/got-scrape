@@ -8,20 +8,25 @@ c = r.content
 
 soup = BeautifulSoup(c, "html.parser")
 all = soup.find_all("span", {"class": "mw-headline"})
-regex = ('(House|References|Secondary sources|Primary sources|Bibliography|External links|Royal court and officials|Night\\\'s Watch and wildlings|The Sand Snakes)')
+regex = ('(House|References|Secondary sources|Primary sources|Bibliography|External links|Other characters|Royal court and officials|Night\\\'s Watch and wildlings|The Sand Snakes)')
 p = re.compile(regex)
 namelist=[]
 linklist = []
+
 for item in all:
     name = item.text
     if p.match(name) is None:
         namelist.append(name)
         urlend = name.replace(" ", "_")
-        linklist.append("https://en.wikipedia.org/wiki/" + urlend)
+        url = str("https://en.wikipedia.org/wiki/" + urlend)
+        linklist.append(url)
     else:
         pass
-print(namelist)
-print(linklist)
+
+df = pandas.DataFrame(
+    {'Name': namelist,
+     'URL': linklist})
+df.to_csv("data.csv")
 
 #this is a WIP, trying to filter out only the URLs which lead to actual character pages
 # a = 0
