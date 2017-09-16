@@ -15,7 +15,7 @@ namelist=[]
 linklist = []
 checklist = []
 infolist = []
-def linkscrape():
+def generatelinks():
     for item in all:
         name = item.text
         if p.match(name) is None:
@@ -40,6 +40,7 @@ def linkscrape():
 
     #character page exists checker - scrapes for redirect link text (this is the name of the character if redirected to
     # the 'list of characters' page
+def linkscrape():
     a = 0
     for item in linklist:
         request = requests.get(item)
@@ -75,6 +76,8 @@ def linkscrape():
             checklist.append("No")
             infolist.append("")
         print(str(a) + " of 124 entries checked")
+        # print(checklist)
+        # print(infolist)
         a = a + 1
 '''
 Dataframe issue?
@@ -90,10 +93,13 @@ def datasave():
          'URL': linklist,
          'Page': checklist,
          'Infobox': infolist})
-    df.to_csv("TESTdata.csv")
-    df2 = pandas.read_csv('TESTdata.csv')
+    '''
+    uncomment these for testing purposes
+    '''
+    df.to_csv("TESTdata2.csv")
+    df2 = pandas.read_csv('TESTdata2.csv')
     df_reorder = df2[['Name', 'URL', 'Page', 'Infobox']]  # rearrange columns here
-    df_reorder.to_csv('TESTdata.csv', index=False)
+    df_reorder.to_csv('TESTdata2.csv', index=False)
     print("Saved")
 
 '''
@@ -120,9 +126,10 @@ def genderscrape():
 (but this will be a later feature - will just focus on 1 chart for now)
 -eg male/female breakdown, number of episodes each character featured in etc.
 '''
-#linkscrape, datasave and other -scrape() methods will only run occasionally to update the data
+#generatelinks(), linkscrape, datasave and other -scrape() methods will only run occasionally to update the data
+generatelinks()
 linkscrape()
 datasave()
-genderscrape()
+# genderscrape()
 #The generatechart() method will be run every time and will access the csv/database
 #generatechart()
