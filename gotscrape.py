@@ -113,10 +113,19 @@ OR ... don't do that? scrape every time? idk see how it plays out.
 4) Pass data to generatechart()
 '''
 def genderscrape():
+    #switch out df for the database later
     df = pandas.read_csv("TESTdata.csv")
     infoboxes = df['Infobox']
-    print(infoboxes)
-
+    a = 1
+    for item in infoboxes:
+        a = a+1
+        try:
+            if "Gender" in item:
+                print(a, "Yes", item)
+            else:
+                print(a, "No", item)
+        except:
+            print(a, "Error", item)
 
 # def generatechart():
 '''
@@ -127,9 +136,9 @@ def genderscrape():
 -eg male/female breakdown, number of episodes each character featured in etc.
 '''
 #generatelinks(), linkscrape, datasave and other -scrape() methods will only run occasionally to update the data
-generatelinks()
-linkscrape()
-datasave()
-# genderscrape()
+# generatelinks()
+# linkscrape()
+# datasave()
+genderscrape()
 #The generatechart() method will be run every time and will access the csv/database
 #generatechart()
