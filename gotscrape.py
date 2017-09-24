@@ -53,7 +53,7 @@ def linkscrape():
                 checklist.append("No")
                 infolist.append("")
             else:
-                getinfobox()
+                getinfobox(item)
                 print("getting infobox")
         except:
             checklist.append("No")
@@ -61,33 +61,44 @@ def linkscrape():
         print(str(a) + " of 124 entries checked")
         a = a + 1
 
-def getinfobox():
+def getinfobox(item):
     try:
-        table = soup2.find(("table",{"class:", "infobox"}))
+        table = soup2.find(("table", {"class:", "infobox"}))
         if "Male" or "Female" in table.text:
-            #the next line has .encode etc method to solve an encoding error I'd get later,
-            #when trying to read infobox data from the .csv it creates.
-            #the HTML contains a non-utf-8 character which we can just remove cos we don't need
-            #the code to actually work - just need to scrape it.
+            # the next line has .encode etc method to solve an encoding error I'd get later,
+            # when trying to read infobox data from the .csv it creates.
+            # the HTML contains a non-utf-8 character which we can just remove cos we don't need
+            # the code to actually work - just need to scrape it.
             infobox = table.encode('utf-8').strip()
             checklist.append("Yes")
             infolist.append(infobox)
             # print(table)
-        elif "may refer to" in table.text:
-            checklist.append("No")
-            infolist.append("")
         else:
-            checklist.append("No")
-            infolist.append("")
+            print("trying")
+            request2 = requests.get(str(item)+"_(character)")
+            y = request2.content
+            soup3 = BeautifulSoup(y, "html.parser")
+            table2 = soup3.find(("table", {"class:", "infobox"}))
+            print(table2)
+            # checklist.append("No")
+            # infolist.append("")
+            #
+            #     checklist.append("No")
+            #     infolist.append("")
+        # else:
+        #     checklist.append("No")
+        #     infolist.append("")
     except:
         checklist.append("No")
         infolist.append("")
+
 '''
 Dataframe issue?
 Look at this awesome page:
 
 http://queirozf.com/entries/pandas-dataframe-by-example
 '''
+
 def datasave():
     #in a later version this dataframe will be a database which will update itself automatically every now and then
     #this will make the script run much more quickly as df won't need to be generated every time
