@@ -15,7 +15,7 @@ namelist=[]
 linklist = []
 checklist = []
 infolist = []
-def generatelinks():
+def linkscrape():
     for item in all:
         name = item.text
         if p.match(name) is None:
@@ -40,12 +40,10 @@ def generatelinks():
 
     #character page exists checker - scrapes for redirect link text (this is the name of the character if redirected to
     # the 'list of characters' page
-def linkscrape():
     a = 0
     for item in linklist:
         request = requests.get(item)
         z = request.content
-        global soup2
         soup2 = BeautifulSoup(z, "html.parser")
         try:
             redirected = soup2.find("a", {"class:", "mw-redirect"}).text
@@ -53,35 +51,31 @@ def linkscrape():
                 checklist.append("No")
                 infolist.append("")
             else:
-                getinfobox()
-                print("getting infobox")
+                try:
+                    table = soup2.find(("table",{"class:", "infobox"}))
+                    if namelist[a] or "Male" or "Female" in table.text:
+                        #the next line has .encode etc method to solve an encoding error I'd get later,
+                        #when trying to read infobox data from the .csv it creates.
+                        #the HTML contains a non-utf-8 character which we can just remove cos we don't need
+                        #the code to actually work - just need to scrape it.
+                        infobox = table.encode('utf-8').strip()
+                        checklist.append("Yes")
+                        infolist.append(infobox)
+                        # print(table)
+                    elif "may refer to" in table.text:
+                        checklist.append("No")
+                        infolist.append("")
+                    else:
+                        checklist.append("No")
+                        infolist.append("")
+                except:
+                    checklist.append("No")
+                    infolist.append("")
         except:
             checklist.append("No")
             infolist.append("")
         print(str(a) + " of 124 entries checked")
         a = a + 1
-
-def getinfobox():
-    try:
-        table = soup2.find(("table",{"class:", "infobox"}))
-        if "Male" or "Female" in table.text:
-            #the next line has .encode etc method to solve an encoding error I'd get later,
-            #when trying to read infobox data from the .csv it creates.
-            #the HTML contains a non-utf-8 character which we can just remove cos we don't need
-            #the code to actually work - just need to scrape it.
-            infobox = table.encode('utf-8').strip()
-            checklist.append("Yes")
-            infolist.append(infobox)
-            # print(table)
-        elif "may refer to" in table.text:
-            checklist.append("No")
-            infolist.append("")
-        else:
-            checklist.append("No")
-            infolist.append("")
-    except:
-        checklist.append("No")
-        infolist.append("")
 '''
 Dataframe issue?
 Look at this awesome page:
@@ -96,13 +90,10 @@ def datasave():
          'URL': linklist,
          'Page': checklist,
          'Infobox': infolist})
-    '''
-    uncomment these for testing purposes
-    '''
-    df.to_csv("TESTdata2.csv")
-    df2 = pandas.read_csv('TESTdata2.csv')
+    df.to_csv("TESTdata.csv")
+    df2 = pandas.read_csv('TESTdata.csv')
     df_reorder = df2[['Name', 'URL', 'Page', 'Infobox']]  # rearrange columns here
-    df_reorder.to_csv('TESTdata2.csv', index=False)
+    df_reorder.to_csv('TESTdata.csv', index=False)
     print("Saved")
 
 '''
@@ -116,19 +107,10 @@ OR ... don't do that? scrape every time? idk see how it plays out.
 4) Pass data to generatechart()
 '''
 def genderscrape():
-    #switch out df for the database later
     df = pandas.read_csv("TESTdata.csv")
     infoboxes = df['Infobox']
-    a = 1
-    for item in infoboxes:
-        a = a+1
-        try:
-            if "Gender" in item:
-                print(a, "Yes", item)
-            else:
-                print(a, "No", item)
-        except:
-            print(a, "Error", item)
+    print(infoboxes)
+
 
 # def generatechart():
 '''
@@ -138,10 +120,9 @@ def genderscrape():
 (but this will be a later feature - will just focus on 1 chart for now)
 -eg male/female breakdown, number of episodes each character featured in etc.
 '''
-#generatelinks(), linkscrape, datasave and other -scrape() methods will only run occasionally to update the data
-generatelinks()
+#linkscrape, datasave and other -scrape() methods will only run occasionally to update the data
 linkscrape()
 datasave()
-# genderscrape()
+genderscrape()
 #The generatechart() method will be run every time and will access the csv/database
 #generatechart()
