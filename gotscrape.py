@@ -3,7 +3,6 @@ import pandas
 import re
 from bs4 import BeautifulSoup
 
-
 r = requests.get("https://en.wikipedia.org/wiki/List_of_A_Song_of_Ice_and_Fire_characters")
 c = r.content
 
@@ -15,6 +14,7 @@ namelist=[]
 linklist = []
 checklist = []
 infolist = []
+
 def generatelinks():
     for item in all:
         name = item.text
@@ -47,47 +47,49 @@ def linkscrape():
         z = request.content
         global soup2
         soup2 = BeautifulSoup(z, "html.parser")
-        try:
-            redirected = soup2.find("a", {"class:", "mw-redirect"}).text
-            if redirected == namelist[a]:
+        if "may refer to" in soup2.text:
+            trychar(request, item)
+        else:
+            try:
+                redirected = soup2.find("a", {"class:", "mw-redirect"}).text
+                if redirected == namelist[a]:
+                    checklist.append("No")
+                    infolist.append("")
+                else:
+                    getinfobox(item)
+                    print("getting infobox")
+            except:
                 checklist.append("No")
                 infolist.append("")
-            else:
-                getinfobox(item)
-                print("getting infobox")
-        except:
-            checklist.append("No")
-            infolist.append("")
         print(str(a) + " of 124 entries checked")
         a = a + 1
+
+def trychar(request, item):
+    try:
+        print("trying")
+        request2 = requests.get(str(item) + "_(character)")
+        y = request2.content
+        soup3 = BeautifulSoup(y, "html.parser")
+        infobox2 = soup3.find(("table", {"class:", "infobox"}))
+        infobox = infobox2.encode('utf-8').strip()
+        if "Male" or "Female" in infobox:
+            checklist.append("Yes")
+            infolist.append(infobox)
+        else:
+            checklist.append("No")
+            infolist.append("")
+    except:
+        print("Fail")
+        checklist.append("No")
+        infolist.append("")
 
 def getinfobox(item):
     try:
         table = soup2.find(("table", {"class:", "infobox"}))
-        if "Male" or "Female" in table.text:
-            # the next line has .encode etc method to solve an encoding error I'd get later,
-            # when trying to read infobox data from the .csv it creates.
-            # the HTML contains a non-utf-8 character which we can just remove cos we don't need
-            # the code to actually work - just need to scrape it.
-            infobox = table.encode('utf-8').strip()
-            checklist.append("Yes")
-            infolist.append(infobox)
+        infobox = table.encode('utf-8').strip()
+        checklist.append("Yes")
+        infolist.append(infobox)
             # print(table)
-        else:
-            print("trying")
-            request2 = requests.get(str(item)+"_(character)")
-            y = request2.content
-            soup3 = BeautifulSoup(y, "html.parser")
-            table2 = soup3.find(("table", {"class:", "infobox"}))
-            print(table2)
-            # checklist.append("No")
-            # infolist.append("")
-            #
-            #     checklist.append("No")
-            #     infolist.append("")
-        # else:
-        #     checklist.append("No")
-        #     infolist.append("")
     except:
         checklist.append("No")
         infolist.append("")
