@@ -103,6 +103,13 @@ def refineinfobox(item,table):
             print("FINALLY")
             break
         # break
+    '''
+    BOTH "FINALLY" AND "TRIGGERED" ARE TRIGGERED
+    WTF
+    this method needs to EITHER do the IF statement OR the "no" append etc
+    once if statement is done & found nothing, THEN do the "no"
+    '''
+    print("TRIGGERED")
     checklist.append("No")
     infolist.append("")
 
