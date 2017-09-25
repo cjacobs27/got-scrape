@@ -77,34 +77,34 @@ def trychar(request, item):
             checklist.append("No")
             infolist.append("")
     except:
-        print("Fail")
         checklist.append("No")
         infolist.append("")
 
 def getinfobox(item):
     try:
-        print("trying")
         table = soup2.find_all(("table", {"class:", "infobox"}))
         infobox = table[0].encode('utf-8').strip()
-        if str(infobox).startswith("b'<table class=\"plainlinks"):
-            infobox = table[1].encode('utf-8').strip()
-            if str(infobox).startswith("b'<table class=\"infobox\""):
-                print("Finally")
-            else:
-                infobox = table[2].encode('utf-8').strip()
-                print(infobox)
-        # if "This article" in infobox.text:
-            # infobox = table[1].encode('utf-8').strip()
-            # print(infobox)
-            # if "Gender" in infobox.text:
-            #     checklist.append("Yes")
-            #     infolist.append(infobox)
-        else:
+        if str(infobox).startswith("b'<table class=\"infobox\""):
             checklist.append("Yes")
             infolist.append(infobox)
+        else:
+            refineinfobox(item,table)
     except:
         checklist.append("No")
         infolist.append("")
+
+def refineinfobox(item,table):
+    for i in range(4):
+        if "infobox" in str(table[i]):
+            infobox = table[i].encode('utf-8').strip()
+            checklist.append("Yes")
+            infolist.append(infobox)
+            print(table[i])
+            print("FINALLY")
+            break
+        # break
+    checklist.append("No")
+    infolist.append("")
 
 '''
 Dataframe issue?
@@ -136,7 +136,7 @@ column which contains the infobox entries.
 Need to figure out how to:
 1) iterate through Infobox column
 2) scrape each one for gender data
-3) save Male, Female or None to another df column & overwrite csv(?)
+3) save Male, Female or None to another df column & overwrite csv(?) --- NO, CREATE A NEW LIST with the others above
 OR ... don't do that? scrape every time? idk see how it plays out.
 4) Pass data to generatechart()
 '''
