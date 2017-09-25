@@ -57,7 +57,6 @@ def linkscrape():
                     infolist.append("")
                 else:
                     getinfobox(item)
-                    print("getting infobox")
             except:
                 checklist.append("No")
                 infolist.append("")
@@ -66,7 +65,6 @@ def linkscrape():
 
 def trychar(request, item):
     try:
-        print("trying")
         request2 = requests.get(str(item) + "_(character)")
         y = request2.content
         soup3 = BeautifulSoup(y, "html.parser")
@@ -85,11 +83,25 @@ def trychar(request, item):
 
 def getinfobox(item):
     try:
-        table = soup2.find(("table", {"class:", "infobox"}))
-        infobox = table.encode('utf-8').strip()
-        checklist.append("Yes")
-        infolist.append(infobox)
-            # print(table)
+        print("trying")
+        table = soup2.find_all(("table", {"class:", "infobox"}))
+        infobox = table[0].encode('utf-8').strip()
+        if str(infobox).startswith("b'<table class=\"plainlinks"):
+            infobox = table[1].encode('utf-8').strip()
+            if str(infobox).startswith("b'<table class=\"infobox\""):
+                print("Finally")
+            else:
+                infobox = table[2].encode('utf-8').strip()
+                print(infobox)
+        # if "This article" in infobox.text:
+            # infobox = table[1].encode('utf-8').strip()
+            # print(infobox)
+            # if "Gender" in infobox.text:
+            #     checklist.append("Yes")
+            #     infolist.append(infobox)
+        else:
+            checklist.append("Yes")
+            infolist.append(infobox)
     except:
         checklist.append("No")
         infolist.append("")
