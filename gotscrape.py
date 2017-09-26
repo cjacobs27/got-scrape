@@ -93,26 +93,6 @@ def getinfobox(item):
         checklist.append("No")
         infolist.append("")
 
-# def refineinfobox(item,table):
-#     for i in range(4):
-#         if "infobox" in str(table[i]):
-#             infobox = table[i].encode('utf-8').strip()
-#             checklist.append("Yes")
-#             infolist.append(infobox)
-#             print(table[i])
-#             print("FINALLY")
-#         break
-        # break
-    '''
-    BOTH "FINALLY" AND "TRIGGERED" ARE TRIGGERED
-    WTF
-    this method needs to EITHER do the IF statement OR the "no" append etc
-    once if statement is done & found nothing, THEN do the "no"
-    '''
-    # print("TRIGGERED")
-    # checklist.append("No")
-    # infolist.append("")
-
 def refineinfobox(item,table):
     t = False
     for i in range(4):
@@ -122,16 +102,17 @@ def refineinfobox(item,table):
             t = True
             break
     while t is True:
-        infobox = index
-        print(infobox,"...does this match i?")
+        print("saved")
+        infobox = table[index].encode('utf-8').strip()
+        checklist.append("Yes")
+        infolist.append(infobox)
         break
+    if t is False:
+        print("nothing saved")
+        checklist.append("No")
+        infolist.append("")
     print("done")
-        #     infobox = table[i].encode('utf-8').strip()
-        #     checklist.append("Yes")
-        #     infolist.append(infobox)
-        #     print(table[i])
-        #     print("FINALLY")
-        # break
+
 
 
 '''
@@ -165,12 +146,30 @@ Need to figure out how to:
 1) iterate through Infobox column
 2) scrape each one for gender data
 3) save Male, Female or None to another df column & overwrite csv(?) --- NO, CREATE A NEW LIST with the others above
-OR ... don't do that? scrape every time? idk see how it plays out.
 4) Pass data to generatechart()
 '''
+def infoscrape():
+    #this jiggery pokery TURNS THE string-type variable html into ACTUAL HTML: a bs4 tag, which we need for scraping
+    a = 1
+    df = pandas.read_csv("TESTdata2.csv")
+    infoboxes = df['Infobox']
+    for item in infoboxes:
+        try:
+            a = a + 1
+            d = item
+            html = BeautifulSoup(d, "html.parser")
+            #print below is for testing but all that's left to do is CLEAN the strings for rando tags...
+            #...and then pull out the relevant data using tailored scrape methods such as genderscrape()
+            print(a, html.text)
+        except:
+            # exception is thrown by a float - good thing as float = Nan = no data.
+            print(a, "we all float down here")
+
+
+#parking this for now to investigate a general data mining method for infoboxes, above
 def genderscrape():
     #switch out df for the database later
-    df = pandas.read_csv("TESTdata.csv")
+    df = pandas.read_csv("TESTdata2.csv")
     infoboxes = df['Infobox']
     a = 1
     for item in infoboxes:
@@ -192,9 +191,10 @@ def genderscrape():
 -eg male/female breakdown, number of episodes each character featured in etc.
 '''
 #generatelinks(), linkscrape, datasave and other -scrape() methods will only run occasionally to update the data
-generatelinks()
-linkscrape()
-datasave()
+# generatelinks()
+# linkscrape()
+# datasave()
+infoscrape()
 # genderscrape()
 #The generatechart() method will be run every time and will access the csv/database
 #generatechart()
