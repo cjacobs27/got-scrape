@@ -93,15 +93,15 @@ def getinfobox(item):
         checklist.append("No")
         infolist.append("")
 
-def refineinfobox(item,table):
-    for i in range(4):
-        if "infobox" in str(table[i]):
-            infobox = table[i].encode('utf-8').strip()
-            checklist.append("Yes")
-            infolist.append(infobox)
-            print(table[i])
-            print("FINALLY")
-            break
+# def refineinfobox(item,table):
+#     for i in range(4):
+#         if "infobox" in str(table[i]):
+#             infobox = table[i].encode('utf-8').strip()
+#             checklist.append("Yes")
+#             infolist.append(infobox)
+#             print(table[i])
+#             print("FINALLY")
+#         break
         # break
     '''
     BOTH "FINALLY" AND "TRIGGERED" ARE TRIGGERED
@@ -109,9 +109,30 @@ def refineinfobox(item,table):
     this method needs to EITHER do the IF statement OR the "no" append etc
     once if statement is done & found nothing, THEN do the "no"
     '''
-    print("TRIGGERED")
-    checklist.append("No")
-    infolist.append("")
+    # print("TRIGGERED")
+    # checklist.append("No")
+    # infolist.append("")
+
+def refineinfobox(item,table):
+    t = False
+    for i in range(4):
+        if "infobox" in str(table[i]):
+            print(i)
+            index = i
+            t = True
+            break
+    while t is True:
+        infobox = index
+        print(infobox,"...does this match i?")
+        break
+    print("done")
+        #     infobox = table[i].encode('utf-8').strip()
+        #     checklist.append("Yes")
+        #     infolist.append(infobox)
+        #     print(table[i])
+        #     print("FINALLY")
+        # break
+
 
 '''
 Dataframe issue?
