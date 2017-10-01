@@ -14,6 +14,7 @@ namelist=[]
 linklist = []
 checklist = []
 infolist = []
+to_clean_infotext = []
 
 def generatelinks():
     for item in all:
@@ -149,25 +150,43 @@ def infoscrape():
             a = a + 1
             d = item
             html = BeautifulSoup(d, "html.parser")
+            # print(a)
             inforead(html)
+
             # print(inforead(html))
         except:
             # exception is thrown by a float - good thing as float = Nan = no data.
-            print(a, None)
-            pass
+            to_clean_infotext.append("None")
+            # print(a,"None")
 
 def inforead(html):
     #lowercase followed by uppercase
+    replacemethods = html.text.replace(r"\n\n", "").replace(r"\n", "|").replace("b'", "|")
+    to_clean_infotext.append(replacemethods)
+    # print(replacemethods)
+    # match = re.findall(z,replacemethods)
+    # for i in match:
+    #     cleaninfo = replacemethods.replace(i,i[-2]+"|"+i[-1])
+    #     print(cleaninfo)
+
+def infoclean():
+    cleaninfolist = []
     regex = '[a-z][A-Z]'
     z = re.compile(regex)
-    replacemethods = html.text.replace(r"\n\n", "").replace(r"\n", "|").replace("b'", "|")
-    match = re.findall(z,replacemethods)
-    for i in match:
-        cleaninfo = replacemethods.replace(i,i[-2]+"|"+i[-1])
-        print(cleaninfo)
+    a = 0
+    for replacemethod in to_clean_infotext:
+        matchlist = re.findall(z, replacemethod)
+        a = a + 1
+        for item in matchlist:
+            cleaninfo = replacemethod.replace(str(item),item[-2] + "|" + item[-1])
+            cleaninfolist.append(cleaninfo)
+#this creates a list where a number of versions of each replacemethod string is corrected,
+        #but only for one match at a time: cleaninfolist
+        #now I'm stuck and dunno what to do next.
+    print(cleaninfolist)
 
     '''
-    INSTEAD: create a new list with the other empty lists above, save each replacemethods to it
+    INSTEAD: create a new list with the other empty lists above (to_clean_infolist()), save each replacemethods to it
     via inforead AND THE EXCEPT WITHIN INFOSCRAPE (so the list has the correct number of entries
     - I will add it to datasave so that it will go into TESTdata2.csv)
     create a new method called infoclean
@@ -215,6 +234,7 @@ def inforead(html):
 # generatelinks()
 # linkscrape()
 infoscrape()
+infoclean()
 # datasave()
 # genderscrape()
 #The generatechart() method will be run every time and will access the csv/database
