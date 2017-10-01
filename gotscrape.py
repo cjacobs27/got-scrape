@@ -183,6 +183,13 @@ def infoclean():
 #this creates a list where a number of versions of each replacemethod string is corrected,
         #but only for one match at a time: cleaninfolist
         #now I'm stuck and dunno what to do next.
+        '''
+        TRY ITERATING OVER WHAT YOU'VE JUST APPENDED TO CLEANINFOLIST USING INDEXING.
+        cleaninfolist[-1] --> do same thing somehow? idk??
+        basically overwrite the matches from matchlist in what you've just written
+        keep re-iterating over that until all matches for this replacemethod are in 1 string
+        '''
+
     print(cleaninfolist)
 
     '''
