@@ -162,28 +162,46 @@ def inforead(html):
     z = re.compile(regex)
     replacemethods = html.text.replace(r"\n\n", "").replace(r"\n", "|").replace("b'", "|")
     match = re.findall(z,replacemethods)
-        # print(replacemethods)
     for i in match:
         cleaninfo = replacemethods.replace(i,i[-2]+"|"+i[-1])
-        # cleaninfo = replacemethods.replace(i,match[-2]+"|"+match[-1])
         print(cleaninfo)
+
+    '''
+    INSTEAD: create a new list with the other empty lists above, save each replacemethods to it
+    via inforead AND THE EXCEPT WITHIN INFOSCRAPE (so the list has the correct number of entries
+    - I will add it to datasave so that it will go into TESTdata2.csv)
+    create a new method called infoclean
+    infoclean iterates through items in inforead csv column (replacemethod or None) and replaces etc
+    so that the data is cleaned
+    again this will be saved to a list & then to a column
+    so df will have 2 extra columns: 
+    -Infobox Raw Text
+    -Infobox Clean Text -- ONCE AT THIS STAGE, MAKE SCRAPE METHODS THE BACKEND and next lot of methods
+    the frontend.
+    Then Infobox Clean Text can be read as needed by methods like genderscrape() in order to
+    pass the info to one of the graph generating methods (different graph methods will be needed
+    for different types of graph)
+    OR
+    Infobox Clean Text can be scraped into individual columns, eg 'Gender', 'Number of Titles', 'Kingdom' (could do a
+    pie chart of where people are from) etc.
+    '''
 
 
 #parking this for now to investigate a general data mining method for infoboxes, above
-def genderscrape():
-    #switch out df for the database later
-    df = pandas.read_csv("TESTdata2.csv")
-    infoboxes = df['Infobox']
-    a = 1
-    for item in infoboxes:
-        a = a+1
-        try:
-            if "Gender" in item:
-                print(a, "Yes", item)
-            else:
-                print(a, "No", item)
-        except:
-            print(a, "Error", item)
+# def genderscrape():
+#     #switch out df for the database later
+#     df = pandas.read_csv("TESTdata2.csv")
+#     infoboxes = df['Infobox']
+#     a = 1
+#     for item in infoboxes:
+#         a = a+1
+#         try:
+#             if "Gender" in item:
+#                 print(a, "Yes", item)
+#             else:
+#                 print(a, "No", item)
+#         except:
+#             print(a, "Error", item)
 
 # def generatechart():
 '''
@@ -196,8 +214,8 @@ def genderscrape():
 #generatelinks(), linkscrape, datasave and other -scrape() methods will only run occasionally to update the data
 # generatelinks()
 # linkscrape()
-# datasave()
 infoscrape()
+# datasave()
 # genderscrape()
 #The generatechart() method will be run every time and will access the csv/database
 #generatechart()
