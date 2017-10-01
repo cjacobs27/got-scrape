@@ -139,15 +139,6 @@ def datasave():
     df_reorder.to_csv('TESTdata2.csv', index=False)
     print("Saved")
 
-'''
-genderscrape() will iterate through the code for the info box of each page by reading the csv
-column which contains the infobox entries.
-Need to figure out how to:
-1) iterate through Infobox column
-2) scrape each one for gender data
-3) save Male, Female or None to another df column & overwrite csv(?) --- NO, CREATE A NEW LIST with the others above
-4) Pass data to generatechart()
-'''
 def infoscrape():
     #this jiggery pokery TURNS THE string-type variable html into ACTUAL HTML: a bs4 tag, which we need for scraping
     a = 1
@@ -158,12 +149,24 @@ def infoscrape():
             a = a + 1
             d = item
             html = BeautifulSoup(d, "html.parser")
-            #print below is for testing but all that's left to do is CLEAN the strings for rando tags...
-            #...and then pull out the relevant data using tailored scrape methods such as genderscrape()
-            print(a, html.text)
+            inforead(html)
+            # print(inforead(html))
         except:
             # exception is thrown by a float - good thing as float = Nan = no data.
-            print(a, "we all float down here")
+            print(a, None)
+            pass
+
+def inforead(html):
+    #lowercase followed by uppercase
+    regex = '[a-z][A-Z]'
+    z = re.compile(regex)
+    replacemethods = html.text.replace(r"\n\n", "").replace(r"\n", "|").replace("b'", "|")
+    match = re.findall(z,replacemethods)
+        # print(replacemethods)
+    for i in match:
+        cleaninfo = replacemethods.replace(i,i[-2]+"|"+i[-1])
+        # cleaninfo = replacemethods.replace(i,match[-2]+"|"+match[-1])
+        print(cleaninfo)
 
 
 #parking this for now to investigate a general data mining method for infoboxes, above
