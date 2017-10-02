@@ -161,36 +161,13 @@ def infoscrape():
 
 def inforead(html):
     #lowercase followed by uppercase
-    replacemethods = html.text.replace(r"\n\n", "").replace(r"\n", "|").replace("b'", "|")
-    to_clean_infotext.append(replacemethods)
-    # print(replacemethods)
-    # match = re.findall(z,replacemethods)
-    # for i in match:
-    #     cleaninfo = replacemethods.replace(i,i[-2]+"|"+i[-1])
-    #     print(cleaninfo)
-
-def infoclean():
-    cleaninfolist = []
     regex = '[a-z][A-Z]'
     z = re.compile(regex)
-    a = 0
-    for replacemethod in to_clean_infotext:
-        matchlist = re.findall(z, replacemethod)
-        a = a + 1
-        for item in matchlist:
-            cleaninfo = replacemethod.replace(str(item),item[-2] + "|" + item[-1])
-            cleaninfolist.append(cleaninfo)
-#this creates a list where a number of versions of each replacemethod string is corrected,
-        #but only for one match at a time: cleaninfolist
-        #now I'm stuck and dunno what to do next.
-        '''
-        TRY ITERATING OVER WHAT YOU'VE JUST APPENDED TO CLEANINFOLIST USING INDEXING.
-        cleaninfolist[-1] --> do same thing somehow? idk??
-        basically overwrite the matches from matchlist in what you've just written
-        keep re-iterating over that until all matches for this replacemethod are in 1 string
-        '''
-
-    print(cleaninfolist)
+    replacemethods = html.text.replace(r"\n\n", "").replace("b'", "").replace(r"\n\n", "")
+    print(z.sub('[a-z][A-Z]', replacemethods))
+    to_clean_infotext.append(replacemethods)
+    # print(replacemethods)
+#nope still not getting anywhere
 
     '''
     INSTEAD: create a new list with the other empty lists above (to_clean_infolist()), save each replacemethods to it
@@ -241,7 +218,7 @@ def infoclean():
 # generatelinks()
 # linkscrape()
 infoscrape()
-infoclean()
+# infoclean()
 # datasave()
 # genderscrape()
 #The generatechart() method will be run every time and will access the csv/database
