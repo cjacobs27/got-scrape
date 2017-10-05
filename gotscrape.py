@@ -140,72 +140,27 @@ def datasave():
     df_reorder.to_csv('TESTdata2.csv', index=False)
     print("Saved")
 
-def infoscrape():
-    #this jiggery pokery TURNS THE string-type variable html into ACTUAL HTML: a bs4 tag, which we need for scraping
-    a = 1
+def genderscrape():
     df = pandas.read_csv("TESTdata2.csv")
     infoboxes = df['Infobox']
     for item in infoboxes:
-        try:
-            a = a + 1
-            d = item
+        d = item
+        if type(item) is float:
+            # print("nope")
+            pass
+        else:
             html = BeautifulSoup(d, "html.parser")
-            # print(a)
-            inforead(html)
+            #gotta scrape html now
+            table_rows = html.find_all('tr')
+            for row in table_rows:
+                header = row.find('th')
+                value = row.find('td')
+                # print(type(header))
+                if "Gender" in str(header):
+                    #instead of this line, run the next method - a method to encode gender results 1 or 0
+                    print(value.text)
 
-            # print(inforead(html))
-        except:
-            # exception is thrown by a float - good thing as float = Nan = no data.
-            to_clean_infotext.append("None")
-            # print(a,"None")
-
-def inforead(html):
-    #lowercase followed by uppercase
-    regex = '[a-z][A-Z]'
-    z = re.compile(regex)
-    replacemethods = html.text.replace(r"\n\n", "").replace("b'", "").replace(r"\n\n", "")
-    print(z.sub('[a-z][A-Z]', replacemethods))
-    to_clean_infotext.append(replacemethods)
-    # print(replacemethods)
-#nope still not getting anywhere
-
-    '''
-    INSTEAD: create a new list with the other empty lists above (to_clean_infolist()), save each replacemethods to it
-    via inforead AND THE EXCEPT WITHIN INFOSCRAPE (so the list has the correct number of entries
-    - I will add it to datasave so that it will go into TESTdata2.csv)
-    create a new method called infoclean
-    infoclean iterates through items in inforead csv column (replacemethod or None) and replaces etc
-    so that the data is cleaned
-    again this will be saved to a list & then to a column
-    so df will have 2 extra columns: 
-    -Infobox Raw Text
-    -Infobox Clean Text -- ONCE AT THIS STAGE, MAKE SCRAPE METHODS THE BACKEND and next lot of methods
-    the frontend.
-    Then Infobox Clean Text can be read as needed by methods like genderscrape() in order to
-    pass the info to one of the graph generating methods (different graph methods will be needed
-    for different types of graph)
-    OR
-    Infobox Clean Text can be scraped into individual columns, eg 'Gender', 'Number of Titles', 'Kingdom' (could do a
-    pie chart of where people are from) etc.
-    '''
-
-
-#parking this for now to investigate a general data mining method for infoboxes, above
-# def genderscrape():
-#     #switch out df for the database later
-#     df = pandas.read_csv("TESTdata2.csv")
-#     infoboxes = df['Infobox']
-#     a = 1
-#     for item in infoboxes:
-#         a = a+1
-#         try:
-#             if "Gender" in item:
-#                 print(a, "Yes", item)
-#             else:
-#                 print(a, "No", item)
-#         except:
-#             print(a, "Error", item)
-
+            # soup2 = BeautifulSoup(z, "html.parser")
 # def generatechart():
 '''
 -generate a bokeh chart from a dataframe from one of the chart data scraping methods ie genderscrape()
@@ -217,7 +172,7 @@ def inforead(html):
 #generatelinks(), linkscrape, datasave and other -scrape() methods will only run occasionally to update the data
 # generatelinks()
 # linkscrape()
-infoscrape()
+genderscrape()
 # infoclean()
 # datasave()
 # genderscrape()
