@@ -184,12 +184,20 @@ def genderPieChart(malecount,femalecount):
     percents = [0,femalepercent,0,malepercent]
     starts = [p*2*pi for p in percents[:-1]]
     ends = [p*2*pi for p in percents[1:]]
-    colors = ["red","blue"]
-    p = figure(x_range=(-1, 1), y_range=(-1, 1))
-    p.wedge(x=0, y=0, radius=1, start_angle=starts, end_angle=ends, color=colors)
+    #I'm being sneaky here, this IS NOT how this should work
+    #I'm layering two pie charts on top one another, only difference being 1) the colours (switched)
+    #and 2 the legend label. As there's actually only one 'wedge' here the legend would list same
+    #colour for both things otherwise.
+    colors1 = ["red","blue"]
+    colors2 = ["blue", "red"]
+    malelegend = "Male= %s" % (round(malepercent*100,2)) + "%"
+    femalelegend = "Female= %s" % (round(femalepercent*100,2)) +"%"
+    p = figure(x_range=(-1, 1), y_range=(-1, 1),title="GoT Main Characters: Gender Split")
+    p.wedge(x=0, y=0, radius=1, start_angle=starts, end_angle=ends, color=colors2, legend=malelegend)
+    p.wedge(x=0, y=0, radius=1, start_angle=starts, end_angle=ends, color=colors1, legend=femalelegend)
     output_file("pie.html")
     show(p)
-    #this throws a weird error but works anyway
+
 
 
 
