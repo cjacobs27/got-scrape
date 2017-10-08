@@ -2,6 +2,8 @@ import requests
 import pandas
 import re
 from bs4 import BeautifulSoup
+from bokeh.plotting import *
+from numpy import pi
 
 r = requests.get("https://en.wikipedia.org/wiki/List_of_A_Song_of_Ice_and_Fire_characters")
 c = r.content
@@ -138,6 +140,7 @@ def datasave():
     print("Saved")
 
 def genderscrape():
+    unencodedGender = []
     df = pandas.read_csv("TESTdata.csv")
     infoboxes = df['Infobox']
     for item in infoboxes:
@@ -153,14 +156,43 @@ def genderscrape():
                 value = row.find('td')
                 # print(type(header))
                 if "Gender" in str(header):
-                    unencodedGender = value.text
-                    encodeGender(unencodedGender)
+                    gender = value.text
+                    unencodedGender.append(gender)
+    encodeGender(unencodedGender)
+
 
 def encodeGender(unencodedGender):
-    if "Female" in str(unencodedGender):
-        print("1")
-    else:
-        print("0")
+    male = []
+    female = []
+    #there are 42 items in the list unencodedGender, created by genderscrape()
+    for item in unencodedGender:
+        if "Female" in item:
+            female.append("1")
+        else:
+            male.append("1")
+    malecount = len(male)
+    femalecount = len(female)
+    genderPieChart(malecount,femalecount)
+
+def genderPieChart(malecount,femalecount):
+    #working out percentages:
+    wholecount = malecount + femalecount
+    malepercent = round((malecount / wholecount), 2)
+    femalepercent = round((femalecount / wholecount), 2)
+    print(malepercent)
+    print(femalepercent)
+    percents = [0,femalepercent,0,malepercent]
+    starts = [p*2*pi for p in percents[:-1]]
+    ends = [p*2*pi for p in percents[1:]]
+    colors = ["red","blue"]
+    p = figure(x_range=(-1, 1), y_range=(-1, 1))
+    p.wedge(x=0, y=0, radius=1, start_angle=starts, end_angle=ends, color=colors)
+    output_file("pie.html")
+    show(p)
+    #this throws a weird error but works anyway
+
+
+
 
 # def generatechart():
 '''
