@@ -14,7 +14,6 @@ namelist=[]
 linklist = []
 checklist = []
 infolist = []
-to_clean_infotext = []
 
 def generatelinks():
     for item in all:
@@ -114,8 +113,6 @@ def refineinfobox(item,table):
         infolist.append("")
     print("done")
 
-
-
 '''
 Dataframe issue?
 Look at this awesome page:
@@ -134,19 +131,18 @@ def datasave():
     '''
     uncomment these for testing purposes
     '''
-    df.to_csv("TESTdata2.csv")
-    df2 = pandas.read_csv('TESTdata2.csv')
+    df.to_csv("TESTdata.csv")
+    df2 = pandas.read_csv('TESTdata.csv')
     df_reorder = df2[['Name', 'URL', 'Page', 'Infobox']]  # rearrange columns here
-    df_reorder.to_csv('TESTdata2.csv', index=False)
+    df_reorder.to_csv('TESTdata.csv', index=False)
     print("Saved")
 
 def genderscrape():
-    df = pandas.read_csv("TESTdata2.csv")
+    df = pandas.read_csv("TESTdata.csv")
     infoboxes = df['Infobox']
     for item in infoboxes:
         d = item
         if type(item) is float:
-            # print("nope")
             pass
         else:
             html = BeautifulSoup(d, "html.parser")
@@ -160,7 +156,7 @@ def genderscrape():
                     #instead of this line, run the next method - a method to encode gender results 1 or 0
                     print(value.text)
 
-            # soup2 = BeautifulSoup(z, "html.parser")
+
 # def generatechart():
 '''
 -generate a bokeh chart from a dataframe from one of the chart data scraping methods ie genderscrape()
@@ -170,11 +166,9 @@ def genderscrape():
 -eg male/female breakdown, number of episodes each character featured in etc.
 '''
 #generatelinks(), linkscrape, datasave and other -scrape() methods will only run occasionally to update the data
-# generatelinks()
-# linkscrape()
+generatelinks()
+linkscrape()
+datasave()
 genderscrape()
-# infoclean()
-# datasave()
-# genderscrape()
 #The generatechart() method will be run every time and will access the csv/database
 #generatechart()
