@@ -153,9 +153,14 @@ def genderscrape():
                 value = row.find('td')
                 # print(type(header))
                 if "Gender" in str(header):
-                    #instead of this line, run the next method - a method to encode gender results 1 or 0
-                    print(value.text)
+                    unencodedGender = value.text
+                    encodeGender(unencodedGender)
 
+def encodeGender(unencodedGender):
+    if "Female" in str(unencodedGender):
+        print("1")
+    else:
+        print("0")
 
 # def generatechart():
 '''
@@ -166,9 +171,9 @@ def genderscrape():
 -eg male/female breakdown, number of episodes each character featured in etc.
 '''
 #generatelinks(), linkscrape, datasave and other -scrape() methods will only run occasionally to update the data
-generatelinks()
-linkscrape()
-datasave()
+# generatelinks()
+# linkscrape()
+# datasave()
 genderscrape()
 #The generatechart() method will be run every time and will access the csv/database
 #generatechart()
